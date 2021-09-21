@@ -32,8 +32,7 @@
         android:text="ここに結果"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:fontFamily="monospace"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
     <Button
@@ -41,7 +40,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="今日"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="#FFFFCC"
+        android:textColor="@color/black"
         app:layout_constraintTop_toTopOf="@+id/tomorrow"
         app:layout_constraintBottom_toBottomOf="@+id/tomorrow"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,9 +51,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="明日"
-        android:backgroundTint="@color/black"
-        app:layout_constraintTop_toTopOf="@+id/guidelineCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="#FFFFCC"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
     <Button
@@ -61,7 +62,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="明後日"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="#FFFFCC"
+        android:textColor="@color/black"
         app:layout_constraintTop_toTopOf="@+id/tomorrow"
         app:layout_constraintBottom_toBottomOf="@+id/tomorrow"
         app:layout_constraintStart_toEndOf="@+id/tomorrow"

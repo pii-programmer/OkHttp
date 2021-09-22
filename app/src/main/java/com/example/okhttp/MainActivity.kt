@@ -17,11 +17,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        // bindingの初期化
         binding = ActivityMainBinding.inflate(layoutInflater)
-        // handlerの初期　メインスレッドを指定
+        setContentView(binding.root)
+
+        // handlerの初期　　メインスレッドを指定
         handler = Handler(Looper.getMainLooper())
         // clientの初期化
         client = OkHttpClient()
@@ -33,9 +32,9 @@ class MainActivity : AppCompatActivity() {
             client.newCall(request).enqueue(object: Callback{
                 // 通信失敗時
                 override fun onFailure(call: Call, e: IOException) {
-//                    handler.post{
-//                        binding.result.text = "Error"
-//                    }
+                        handler.post{
+                            binding.result.text = "Error"
+                        }
                 }
                 // レスポンス処理
                 override fun onResponse(call: Call, response: Response) {

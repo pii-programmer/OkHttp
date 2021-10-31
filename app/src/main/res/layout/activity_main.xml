@@ -1,72 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rainbow"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineCenter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="invisible"
-        app:layout_constraintGuide_percent="0.5"/>
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--        android:id="@+id/toolbar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:background="@drawable/rainbow"-->
+<!--        app:title="お天気予報"/>-->
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="天気予報アプリ"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineCenter"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2"/>
-    <Button
-        android:id="@+id/today"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="今日"
-        android:backgroundTint="#FFFFCC"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toTopOf="@+id/tomorrow"
-        app:layout_constraintBottom_toBottomOf="@+id/tomorrow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tomorrow"/>
-    <Button
-        android:id="@+id/tomorrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="明日"
-        android:backgroundTint="#FFFFCC"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/guidelineCenter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-    <Button
-        android:id="@+id/dayAfterTomorrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="明後日"
-        android:backgroundTint="#FFFFCC"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toTopOf="@+id/tomorrow"
-        app:layout_constraintBottom_toBottomOf="@+id/tomorrow"
-        app:layout_constraintStart_toEndOf="@+id/tomorrow"
-        app:layout_constraintEnd_toEndOf="parent"/>
-    <TextView
-        android:id="@+id/result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:theme="@style/Theme.Practice.AppBarOverlay">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

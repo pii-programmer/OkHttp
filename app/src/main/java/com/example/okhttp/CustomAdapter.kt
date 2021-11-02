@@ -20,14 +20,20 @@ class CustomAdapter(context: Context, list: MutableList<Data>):ArrayAdapter<Data
         val data = getItem(position) as Data
 
         when(data.icon){
-            "iconGlass" -> {
-                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.icon_glass)
+            "tokyo" -> {
+                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.tokyo)
             }
-            "iconEye" -> {
-                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.icon_eye)
+            "shizuoka" -> {
+                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.shizuoka)
             }
-            "iconNormal" -> {
-                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.icon_normal)
+            "kagawa" -> {
+                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.kagawa)
+            }
+            "kumamoto" -> {
+                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.kumamoto)
+            }
+            "miyagi" -> {
+                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.miyagi)
             }
         }
 

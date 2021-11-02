@@ -13,7 +13,7 @@
         android:id="@+id/icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/icon_normal"
+        android:src="@drawable/icon_glass"
         app:layout_constraintTop_toTopOf="@id/row_view_parent"
         app:layout_constraintStart_toStartOf="@id/row_view_parent" />
 

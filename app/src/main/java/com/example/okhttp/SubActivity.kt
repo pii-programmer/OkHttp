@@ -14,7 +14,6 @@ class SubActivity:AppCompatActivity() {
         setContentView(binding.root)
 
         val listData = intent.getSerializableExtra("LIST_POSITION")
-
         when(listData){
             "東京都" -> {
                 binding.result.text = "東京都"
@@ -25,8 +24,8 @@ class SubActivity:AppCompatActivity() {
             "香川県" -> {
                 binding.result.text = "香川県"
             }
-            "北海道" -> {
-                binding.result.text = "北海道"
+            "静岡県" -> {
+                binding.result.text = "静岡県"
             }
             "宮城県" -> {
                 binding.result.text = "宮城県"

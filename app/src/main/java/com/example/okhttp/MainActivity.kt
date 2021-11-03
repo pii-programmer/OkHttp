@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var client: OkHttpClient
     lateinit var request: Request
-    lateinit var handler: Handler
+//    lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +35,10 @@ class MainActivity : AppCompatActivity() {
             "kumamoto" to "熊本県",
             "kagawa" to "香川県",
             "shizuoka" to "静岡県",
-            "miyagi" to "宮城県")
+            "miyagi" to "宮城県"
+        )
 
-        for((key,value) in maps){
+        for ((key, value) in maps) {
             datas.add(Data().apply {
                 icon = key
                 prefecture = value
@@ -48,39 +49,39 @@ class MainActivity : AppCompatActivity() {
         // clientの初期化
         client = OkHttpClient()
         // requestの初期化
-        request = Request.Builder().url("https://weather.tsukumijima.net/api/forecast?city=130010").get().build()
-        // handlerの初期化
-        handler = Handler(Looper.getMainLooper())
+        request =
+            Request.Builder().url("https://weather.tsukumijima.net/api/forecast?city=130010").get()
+                .build()
+        // handler = Handler(Looper.getMainLooper())
 
-        GlobalScope.launch{
-            withContext(Dispatchers.IO){
-                client.newCall(request).enqueue(object: Callback{
+        GlobalScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         binding.apiText.text = e.toString()
                     }
 
                     override fun onResponse(call: Call, response: Response) {
                         val jsonObject = JSONObject(response.body?.string())
-                        val bodyText = jsonObject.getJSONObject("description")["bodyText"]
-                        handler.post{
-                            Intent(this@MainActivity,SubActivity::class.java).apply {
-                                putExtra("BODY_TEXT", bodyText.toString())
-                                startActivity(this)
-                            }
-                        }
-                        // TODO:bodyTextをサブ画面に表示
-                        // TODO:各都道府県に対応
-                        // TODO:room使用
+                        val resultText = jsonObject.getJSONObject("description")["bodyText"] as String
                     }
+                    // TODO:bodyTextをサブ画面に表示
+                    // TODO:各都道府県に対応
+                    // TODO:room使用
                 })
             }
-            withContext(Dispatchers.Main){
-                binding.listView.setOnItemClickListener{ parent:AdapterView<*>, view: View, position, id ->
+            withContext(Dispatchers.Main) {
+                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
                     val listPosition = parent.getItemAtPosition(position) as Data
                     val prefecturePosition = listPosition.prefecture
 
-                    Intent(this@MainActivity,SubActivity::class.java).apply{
+                    Intent(this@MainActivity, SubActivity::class.java).apply {
                         putExtra("LIST_POSITION", prefecturePosition)
+                        startActivity(this)
+                    }
+
+                    Intent(this@MainActivity, SubActivity::class.java).apply {
+                        putExtra("RESULT_TEXT", result.toString())
                         startActivity(this)
                     }
                 }

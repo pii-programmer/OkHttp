@@ -32,7 +32,7 @@ class SubActivity:AppCompatActivity() {
             }
         }
 
-        val apiData = intent.getSerializableExtra("BODY_TEXT")
+        val apiData = intent.getSerializableExtra("RESULT_TEXT")
         binding.result.text = apiData.toString()
     }
 }

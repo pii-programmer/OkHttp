@@ -31,8 +31,8 @@ class SubActivity:AppCompatActivity() {
                 binding.result.text = "宮城県"
             }
         }
-
-        val apiData = intent.getSerializableExtra("RESULT_TEXT")
-        binding.result.text = apiData.toString()
     }
 }
+
+//val apiData = intent.getSerializableExtra("RESULT_TEXT")
+//binding.result.text = apiData.toString()

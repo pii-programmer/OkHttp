@@ -7,6 +7,8 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
+import androidx.room.Dao
+import androidx.room.Room
 import com.example.okhttp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import okhttp3.*
@@ -17,8 +19,10 @@ import org.json.JSONObject
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
-
+    // 処理が重くなる変数、頻発の変数をlateinit
     private lateinit var binding: ActivityMainBinding
+    lateinit var DB: AppDatabase
+    lateinit var dao: ApiDao
     lateinit var client: OkHttpClient
     lateinit var request: Request
 //    lateinit var handler: Handler
@@ -29,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val datas = mutableListOf<Data>()
-        // kayはユニーク
+        // keyはユニーク
         val maps = mapOf(
             "tokyo" to "東京都",
             "kumamoto" to "熊本県",
@@ -46,16 +50,22 @@ class MainActivity : AppCompatActivity() {
         }
         binding.listView.adapter = CustomAdapter(this, datas)
 
+        // DBの初期化
+        DB = Room.databaseBuilder(this, AppDatabase::class.java, "API_table").build()
+        // daoの初期化
+        dao = DB.ApiDao()
         // clientの初期化
         client = OkHttpClient()
         // requestの初期化
         request =
             Request.Builder().url("https://weather.tsukumijima.net/api/forecast?city=130010").get()
                 .build()
-        // handler = Handler(Looper.getMainLooper())
+//         handler = Handler(Looper.getMainLooper())
 
         GlobalScope.launch {
-            val result = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
+                dao.deleteAll()
+
                 client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         binding.apiText.text = e.toString()
@@ -64,11 +74,15 @@ class MainActivity : AppCompatActivity() {
                     override fun onResponse(call: Call, response: Response) {
                         val jsonObject = JSONObject(response.body?.string())
                         val resultText = jsonObject.getJSONObject("description")["bodyText"] as String
+                        val results = mutableListOf<API>()
+                        results.add(API(1,"").apply {
+                            text = resultText
+                        })
+                        dao.insert(results)
                     }
-                    // TODO:bodyTextをサブ画面に表示
-                    // TODO:各都道府県に対応
-                    // TODO:room使用
                 })
+                val resultList = dao.selectAll()
+                binding.apiText.text = resultList as String
             }
             withContext(Dispatchers.Main) {
                 binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
@@ -79,13 +93,13 @@ class MainActivity : AppCompatActivity() {
                         putExtra("LIST_POSITION", prefecturePosition)
                         startActivity(this)
                     }
-
-                    Intent(this@MainActivity, SubActivity::class.java).apply {
-                        putExtra("RESULT_TEXT", result.toString())
-                        startActivity(this)
-                    }
                 }
             }
         }
     }
 }
+
+//                    Intent(this@MainActivity, SubActivity::class.java).apply {
+//                        putExtra("RESULT_TEXT", result.toString())
+//                        startActivity(this)
+//                    }

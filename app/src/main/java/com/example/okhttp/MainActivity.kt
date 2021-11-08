@@ -1,5 +1,6 @@
 package com.example.okhttp
 
+import android.app.ProgressDialog.show
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -63,11 +64,10 @@ class MainActivity : AppCompatActivity() {
          handler = Handler(Looper.getMainLooper())
 
         GlobalScope.launch {
-            withContext(Dispatchers.IO) {
-                IPHostConvert().constructor() //fixme: unknownException No address associatedの対策
+            val response = withContext(Dispatchers.IO) {
+//                IPHostConvert().constructor() //unknownHostException No address associatedの対策
 
                 dao.deleteAll()
-
                 client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) { //メインスレッド以外でUIを変更するとExceptionが発生する
 //                        val postExecutor = HandlerPostExecutor(View)
@@ -81,13 +81,42 @@ class MainActivity : AppCompatActivity() {
                         results.add(API(1,"今日の天気").apply {
                             text = resultText
                         })
-                        dao.insert(results)
+                        try{
+                            // TODO: 今度は、Roomにinsertしたものを表示させられるか EntityとData<API>クラスは分ける?
+                            val sampleData = mutableListOf<API>()
+                            sampleData.add(API(2,"APIのテキストじゃなくて普通にテキストをDBに入れてみる"))
+                            dao.insert(sampleData)
+                            dao.selectAll()
+                            show(response)
+                            true
+                        } catch (e: Exception){
+                            throw e
+                        }
                     }
                 })
-                val resultList = dao.selectAll()
-                binding.apiText.text = resultList.toString()  //TODO
             }
-            withContext(Dispatchers.Main) {
+//            withContext(Dispatchers.Main) {
+//                val resultList = dao.selectAll()
+//                binding.apiText.text = resultList.toString()
+//                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
+//                    val listPosition = parent.getItemAtPosition(position) as Data
+//                    val prefecturePosition = listPosition.prefecture
+//
+//                    Intent(this@MainActivity, SubActivity::class.java).apply {
+//                        putExtra("LIST_POSITION", prefecturePosition)
+//                        startActivity(this)
+//                    }
+//                }
+//            }
+        }
+    }
+
+    private fun show(response: Response) {
+        GlobalScope.launch {
+            withContext(Dispatchers.Main){
+                // TODO: 今度は、Roomにinsertしたものを表示させられるか
+                binding.apiText.text = response.toString()
+
                 binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
                     val listPosition = parent.getItemAtPosition(position) as Data
                     val prefecturePosition = listPosition.prefecture
@@ -101,6 +130,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
+// {処理A} Thread.sleep(1000) {処理B} 処理Aを待ってから処理Bを走らせる
 
 //                    Intent(this@MainActivity, SubActivity::class.java).apply {
 //                        putExtra("RESULT_TEXT", result.toString())

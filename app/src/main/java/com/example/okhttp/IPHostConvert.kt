@@ -13,4 +13,4 @@ class IPHostConvert {
 }
 // このクラスを作った理由:UnKownHostException
 // No address associated with host:"weather.tsukimijima.net" だったため
-//TODO: IPアドレスを指定すれば解決できる? or IPアドレスが無いとExceptionが起きて通信できないのかスローさせない方法があるのか
+//TODO: IPアドレスを指定する（IPアドレスが無いからExceptionが起きている?）

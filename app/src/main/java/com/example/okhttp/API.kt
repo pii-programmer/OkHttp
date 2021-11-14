@@ -4,8 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
-@Serializable
-@Entity(tableName = "API_table")
+@Entity(tableName = "api_table")
 data class API (
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null,

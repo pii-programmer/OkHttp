@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.room.Room
 import com.example.okhttp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
@@ -19,13 +20,15 @@ import org.json.JSONObject
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
-    // 処理が重くなる変数、頻発の変数をlateinitに
+    // coordinatorLayoutだとinflateにしてrootを取得し、onCreate時にrootを渡す。
+    // NullPointerExceptionを発生させないためonCreate前にlateinit
     private lateinit var binding: ActivityMainBinding
+    // 処理が重くなる変数をlateinit(事前に変数を定義しておくことでonCreate時の処理が初期化だけになる)
     lateinit var DB: AppDatabase
     lateinit var dao: ApiDao
     lateinit var client: OkHttpClient
     lateinit var request: Request
-    lateinit var handler: Handler
+//    lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,23 +54,24 @@ class MainActivity : AppCompatActivity() {
         binding.listView.adapter = CustomAdapter(this, datas)
 
         // DBの初期化
-        DB = Room.databaseBuilder(this, AppDatabase::class.java, "API_table").build()
+        DB = Room.databaseBuilder(this, AppDatabase::class.java, "api_table").build()
         // daoの初期化
         dao = DB.ApiDao()
-        // clientの初期化
-        client = OkHttpClient()
-        // requestの初期化
-        request =
-            Request.Builder().url("https://weather.tsukumijima.net/api/forecast?city=130010").get()
-                .build()
-        // handlerの初期化
-         handler = Handler(Looper.getMainLooper())
 
         GlobalScope.launch {
-            val response = withContext(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
+                dao.deleteAll()
+
+                // clientの初期化
+                client = OkHttpClient()
+                // requestの初期化
+                request =
+                        Request.Builder().url("https://weather.tsukumijima.net/api/forecast?city=130010").get()
+                                .build()
+                // handlerの初期化
+//                handler = Handler(Looper.getMainLooper())
 //                IPHostConvert().constructor() //unknownHostException No address associatedの対策
 
-                dao.deleteAll()
                 client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) { //メインスレッド以外でUIを変更するとExceptionが発生する
 //                        val postExecutor = HandlerPostExecutor(View)
@@ -77,17 +81,15 @@ class MainActivity : AppCompatActivity() {
                     override fun onResponse(call: Call, response: Response) {
                         val jsonObject = JSONObject(response.body?.string())
                         val resultText = jsonObject.getJSONObject("description")["bodyText"] as String
+
                         val results = mutableListOf<API>()
                         results.add(API(1,"今日の天気").apply {
                             text = resultText
                         })
                         try{
-                            // TODO: 今度は、Roomにinsertしたものを表示させられるか EntityとData<API>クラスは分ける?
-                            val sampleData = mutableListOf<API>()
-                            sampleData.add(API(2,"APIのテキストじゃなくて普通にテキストをDBに入れてみる"))
-                            dao.insert(sampleData)
-                            dao.selectAll()
-                            show(response)
+                            dao.insert(results)
+                            val select = dao.selectAll()
+                            show(result = select as MutableList<API>)
                             true
                         } catch (e: Exception){
                             throw e
@@ -110,13 +112,15 @@ class MainActivity : AppCompatActivity() {
 //            }
         }
     }
-
-    private fun show(response: Response) {
+    private fun show(result: MutableList<API>) {
         GlobalScope.launch {
             withContext(Dispatchers.Main){
-                // TODO: 今度は、Roomにinsertしたものを表示させられるか
-                binding.apiText.text = response.toString()
+                binding.apiText.text = result.toString()
 
+//                val adapter = ArrayAdapter(this@MainActivity, R.layout.api_row_view, result)
+//                binding.apiListView.adapter = adapter
+
+                // ListViewのクリックリスナー
                 binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
                     val listPosition = parent.getItemAtPosition(position) as Data
                     val prefecturePosition = listPosition.prefecture

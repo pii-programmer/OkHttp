@@ -9,9 +9,9 @@ interface ApiDao {
     @Insert
     fun insert(API: MutableList<API>)
 
-    @Query("SELECT * FROM API_table")
+    @Query("SELECT * FROM api_table")
     fun selectAll(): List<API>
 
-    @Query("DELETE FROM API_table")
+    @Query("DELETE FROM api_table")
     fun deleteAll()
 }

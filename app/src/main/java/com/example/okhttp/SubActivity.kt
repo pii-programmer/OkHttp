@@ -31,8 +31,29 @@ class SubActivity:AppCompatActivity() {
                 binding.result.text = "宮城県"
             }
         }
+
+        val iconData = intent.getStringExtra("ICON")
+        when(iconData){
+            "tokyo" -> {
+                binding.subIcon.setImageResource(R.drawable.tokyo)
+            }
+            "kumamoto" -> {
+                binding.subIcon.setImageResource(R.drawable.kumamoto)
+            }
+            "shizuoka" -> {
+                binding.subIcon.setImageResource(R.drawable.shizuoka)
+            }
+            "kagawa" -> {
+                binding.subIcon.setImageResource(R.drawable.kagawa)
+            }
+            "miyagi" -> {
+                binding.subIcon.setImageResource(R.drawable.miyagi)
+            }
+        }
+
+        val bodyText = intent.getStringExtra("API_TEXT")
+        binding.apiText.text = bodyText
     }
 }
-
 //val apiData = intent.getSerializableExtra("RESULT_TEXT")
 //binding.result.text = apiData.toString()

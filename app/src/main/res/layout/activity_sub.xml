@@ -7,13 +7,33 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/sub_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/icon_glass"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/result" />
+
         <TextView
             android:id="@+id/result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ここにresultText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:text="選んだ都道府県はここ"
+            app:layout_constraintStart_toEndOf="@+id/sub_icon"
+            app:layout_constraintTop_toTopOf="@+id/sub_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/sub_icon"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/api_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ここに結果文を出す"
+            app:layout_constraintTop_toBottomOf="@+id/result" />
+
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

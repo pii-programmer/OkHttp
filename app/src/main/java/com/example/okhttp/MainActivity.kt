@@ -1,33 +1,30 @@
 package com.example.okhttp
 
-import android.app.ProgressDialog.show
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.database.Cursor
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import com.example.okhttp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
-import okhttp3.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
-    // coordinatorLayoutだとinflateにしてrootを取得し、onCreate時にrootを渡す。
     // NullPointerExceptionを発生させないためonCreate前にlateinit
     private lateinit var binding: ActivityMainBinding
-    // 処理が重くなる変数をlateinit(事前に変数を定義しておくことでonCreate時の処理が初期化だけになる)
+    // 初期化が後になるものをlateinit
     lateinit var DB: AppDatabase
     lateinit var dao: ApiDao
     lateinit var client: OkHttpClient
     lateinit var request: Request
+//    lateinit var cursor: Cursor
 //    lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,80 +50,75 @@ class MainActivity : AppCompatActivity() {
         }
         binding.listView.adapter = CustomAdapter(this, datas)
 
-        // DBの初期化
-        DB = Room.databaseBuilder(this, AppDatabase::class.java, "api_table").build()
-        // daoの初期化
-        dao = DB.ApiDao()
-
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
+
+                // DB初期化
+                DB = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "api_table").build()
+                // dao初期化
+                dao = DB.ApiDao()
+
                 dao.deleteAll()
 
-                // clientの初期化
+                // client初期化
                 client = OkHttpClient()
-                // requestの初期化
-                request =
-                        Request.Builder().url("https://weather.tsukumijima.net/api/forecast?city=130010").get()
-                                .build()
-                // handlerの初期化
-//                handler = Handler(Looper.getMainLooper())
-//                IPHostConvert().constructor() //unknownHostException No address associatedの対策
+
+                // request初期化
+                request = Request.Builder().url("https://weather.tsukumijima.net/api/forecast?city=130010").get().build()
 
                 client.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) { //メインスレッド以外でUIを変更するとExceptionが発生する
-//                        val postExecutor = HandlerPostExecutor(View)
-//                        handler.post(postExecutor)
+                    override fun onFailure(
+                        call: Call,
+                        e: IOException
+                    ) { //メインスレッド以外でUIを変更するとExceptionが発生する
                     }
 
                     override fun onResponse(call: Call, response: Response) {
                         val jsonObject = JSONObject(response.body?.string())
-                        val resultText = jsonObject.getJSONObject("description")["bodyText"] as String
+                        val resultText =
+                            jsonObject.getJSONObject("description")["bodyText"] as String
 
                         val results = mutableListOf<API>()
-                        results.add(API(1,"今日の天気").apply {
+                        results.add(API(0, "今日の天気").apply {
+                            id = 1
                             text = resultText
                         })
-                        try{
+
+                        try {
                             dao.insert(results)
                             val select = dao.selectAll()
                             show(result = select as MutableList<API>)
                             true
-                        } catch (e: Exception){
+                        } catch (e: Exception) {
                             throw e
                         }
                     }
                 })
             }
-//            withContext(Dispatchers.Main) {
-//                val resultList = dao.selectAll()
-//                binding.apiText.text = resultList.toString()
-//                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
-//                    val listPosition = parent.getItemAtPosition(position) as Data
-//                    val prefecturePosition = listPosition.prefecture
-//
-//                    Intent(this@MainActivity, SubActivity::class.java).apply {
-//                        putExtra("LIST_POSITION", prefecturePosition)
-//                        startActivity(this)
-//                    }
-//                }
-//            }
         }
     }
     private fun show(result: MutableList<API>) {
         GlobalScope.launch {
             withContext(Dispatchers.Main){
-                binding.apiText.text = result.toString()
 
-//                val adapter = ArrayAdapter(this@MainActivity, R.layout.api_row_view, result)
-//                binding.apiListView.adapter = adapter
+//                api 見たい時はここのコメントアウト外す
+//                binding.apiText.text = result.toString()
 
                 // ListViewのクリックリスナー
                 binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
+
                     val listPosition = parent.getItemAtPosition(position) as Data
                     val prefecturePosition = listPosition.prefecture
+                    val icon = listPosition.icon
+
+                    // fixme:ClassCastException: com.example.okhttp.Data cannot be cast to com.example.okhttp.API
+                    val idPosition = parent.getItemAtPosition(position) as API
+                    val text = idPosition.text
 
                     Intent(this@MainActivity, SubActivity::class.java).apply {
                         putExtra("LIST_POSITION", prefecturePosition)
+                        putExtra("ICON", icon)
+                        putExtra("API_TEXT", text)
                         startActivity(this)
                     }
                 }
@@ -134,10 +126,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
-
+//cursor = DB.query("api_table", arrayOf("text"),null,null,null,null,null)
+//cursor.moveToFirst()
 // {処理A} Thread.sleep(1000) {処理B} 処理Aを待ってから処理Bを走らせる
-
+// handlerの初期化
+//                handler = Handler(Looper.getMainLooper())
+//                IPHostConvert().constructor() //unknownHostException No address associatedの対策
+//                        val postExecutor = HandlerPostExecutor(View)
+//                        handler.post(postExecutor)
+//
 //                    Intent(this@MainActivity, SubActivity::class.java).apply {
 //                        putExtra("RESULT_TEXT", result.toString())
 //                        startActivity(this)

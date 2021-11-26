@@ -7,11 +7,12 @@ import androidx.room.Query
 @Dao
 interface ApiDao {
     @Insert
-    fun insert(API: MutableList<API>)
+    fun insertAll(forecasts: MutableList<Forecast>)
 
-    @Query("SELECT * FROM api_table")
-    fun selectAll(): List<API>
+    @Query("SELECT * FROM forecast")
+    fun selectAll():MutableList<Forecast>
 
-    @Query("DELETE FROM api_table")
+    @Query("DELETE FROM forecast")
     fun deleteAll()
 }
+//fun insert(API: MutableList<Forecast>)

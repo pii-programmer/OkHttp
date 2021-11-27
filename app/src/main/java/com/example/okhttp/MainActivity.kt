@@ -1,8 +1,12 @@
 package com.example.okhttp
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
+import androidx.room.migration.Migration
 import com.example.okhttp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -18,39 +22,32 @@ class MainActivity : AppCompatActivity() {
     lateinit var dao: ApiDao
     lateinit var client: OkHttpClient
     lateinit var request: Request
-//    lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val datas = mutableListOf<Data>()
-//         keyはユニーク
-        val maps = mapOf(
-            "tokyo" to "東京都",
-            "kumamoto" to "熊本県",
-            "kagawa" to "香川県",
-            "shizuoka" to "静岡県",
-            "miyagi" to "宮城県"
-        )
-
-        for ((key, value) in maps) {
-            datas.add(Data().apply {
-                icon = key
-                prefecture = value
-            })
-        }
-//        binding.listView.adapter = CustomAdapter(this, datas)
+// activity_mainに表示させておく
+        val datas = mutableListOf<Forecast>()
+        datas.add(Forecast().apply {
+            date = "sample:2021-12-09"
+            telop = "サンプルテロップ"
+        })
+// Adapter
+//        binding.listView.adapter = CustomAdapter(this@MainActivity, datas)
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
 
                 // DB初期化
-                DB = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "forecast").build()
+                DB = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "forecast")
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
                 // dao初期化
                 dao = DB.ApiDao()
 
+                // delete
                 dao.deleteAll()
 
                 // client初期化
@@ -70,57 +67,59 @@ class MainActivity : AppCompatActivity() {
                         val jsonObject = JSONObject(response.body?.string())
 // result
                         val forecastJSONArray = jsonObject.getJSONArray("forecasts")  // "forecasts"はJSONObjectのJSONArray
+
                         for (i in 0 until forecastJSONArray.length()){
                             val forecastJSON = forecastJSONArray.getJSONObject(i)
                             val date = forecastJSON.getString("date")
-                            val telop = forecastJSON.getString("telop")  // 3日分の"date"と"telop"
+                            val telop = forecastJSON.getString("telop")    // 3日分の"date"と"telop"
+                            val detail = forecastJSON.getString("detail")  // "detail"も
 
                             val forecasts = mutableListOf<Forecast>()
                             forecasts.add(Forecast().apply {
                                 this.date = date
                                 this.telop = telop
+                                this.detail = detail
                             })
                             dao.insertAll(forecasts)
                         }
+
                         try {
-//                            val insert = dao.insertAll(forecasts)
-//                            print(insert)
                             val forecastList = dao.selectAll()
-                            print(forecastList)
-                            show()
+                            show(forecast = forecastList)
                             true
                         } catch (e: Exception) {
                             throw e
                         }
+
                     }
                 })
             }
         }
     }
-    private fun show() {
+    private fun show(forecast:MutableList<Forecast>) {
         GlobalScope.launch {
             withContext(Dispatchers.Main){
 // Adapter
-//                binding.listView.adapter = CustomAdapter(this@MainActivity, forecastList as MutableList<Forecast>)
+                binding.listView.adapter = CustomAdapter(this@MainActivity, forecast)
 
 // ListViewのクリックリスナー
-//                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
-//
-//                    val dummyPosition = parent.getItemAtPosition(position) as Forecast
-//                    val send = dummyPosition.telop
-//
-//                    Intent(this@MainActivity, SubActivity::class.java).apply {
-//                        putExtra("DUMMY_POSITION", send)
-////                        putExtra("ICON", icon)
-////                        putExtra("API_TEXT", text)
-//                        startActivity(this)
-//                    }
-//                }
+                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
+
+                    parent.getItemAtPosition(position) as Forecast
+
+                    Intent(this@MainActivity, SubActivity::class.java).apply {
+                        putExtra("ID",id)
+                        startActivity(this)
+                    }
+                }
             }
         }
     }
 }
+
 /****  遠藤さんコメント  ****/
+// {処理A} Thread.sleep(1000) {処理B} 処理Aを待ってから処理Bを走らせる
+
 // val forecasts = mutableListOf<Forecast>()
 /****  遠藤さんコメント  ****/
 
@@ -133,19 +132,12 @@ class MainActivity : AppCompatActivity() {
 //     throw e
 // }
 // private fun show(result: MutableList<API>) {
-
-// val resultText =
-//     jsonObject.getJSONObject("description")["bodyText"] as String
-// val results = mutableListOf<API>()
-// results.add(API(0, "今日の天気").apply {
-//     id = 1
-//     text = resultText
-// })
+// }
 
 // cursor = DB.query("api_table", arrayOf("text"),null,null,null,null,null)
 // cursor.moveToFirst()
 
-// {処理A} Thread.sleep(1000) {処理B} 処理Aを待ってから処理Bを走らせる
+// lateinit var handler: Handler
 // handlerの初期化
 //                handler = Handler(Looper.getMainLooper())
 //                IPHostConvert().constructor() //unknownHostException No address associatedの対策

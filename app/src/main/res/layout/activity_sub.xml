@@ -7,14 +7,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".SubActivity">
 
-        <TextView
-            android:id="@+id/result"
+        <RelativeLayout
+            android:id="@+id/detail_relative_layout0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ダミーテロップ"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            tools:ignore="MissingConstraints">
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/detail_relative_layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            tools:ignore="MissingConstraints">
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/detail_relative_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            tools:ignore="MissingConstraints">
+
+        </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

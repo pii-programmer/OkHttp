@@ -15,7 +15,7 @@ import kotlinx.serialization.json.Json.Default.context
 
 class SubActivity:AppCompatActivity() {
     private lateinit var binding: ActivitySubBinding
-    lateinit var DB: AppDatabase
+    lateinit var db: AppDatabase
     lateinit var dao: ApiDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,14 +23,15 @@ class SubActivity:AppCompatActivity() {
         binding = ActivitySubBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // CustomActivityにする
         GlobalScope.launch {
             val forecast = withContext(Dispatchers.IO) {
 
-                DB = Room.databaseBuilder(this@SubActivity, AppDatabase::class.java, "forecast")
+                db = Room.databaseBuilder(this@SubActivity, AppDatabase::class.java, "forecast")
                     .addMigrations(MIGRATION_1_2)
                     .build()
 
-                dao = DB.ApiDao()
+                dao = db.ApiDao()
 
                 dao.selectAll()
 
@@ -46,7 +47,6 @@ class SubActivity:AppCompatActivity() {
                             val tv0 = TextView(this@SubActivity).apply {
                                 text = forecastRecord.detail
                                 setTextColor(Color.parseColor("green"))
-//                                getColor(R.color.purple_200)
                             }
                             binding.detailRelativeLayout0.addView(tv0)
                         }
@@ -55,7 +55,6 @@ class SubActivity:AppCompatActivity() {
                             val tv1 = TextView(this@SubActivity).apply {
                                 text = forecastRecord.detail
                                 setTextColor(Color.parseColor("red"))
-//                                getColor(R.color.teal_700)
                             }
                             binding.detailRelativeLayout1.addView(tv1)
                         }
@@ -64,7 +63,6 @@ class SubActivity:AppCompatActivity() {
                             val tv2 = TextView(this@SubActivity).apply {
                                 text = forecastRecord.detail
                                 setTextColor(Color.parseColor("blue"))
-//                                getColor(R.color.purple_700)
                             }
                             binding.detailRelativeLayout2.addView(tv2)
                         }

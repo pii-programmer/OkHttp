@@ -15,10 +15,12 @@ import kotlinx.coroutines.withContext
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
+import java.lang.Thread.sleep
 
 class MainActivity : AppCompatActivity() {
+    // NullPointerExceptionが発生するので初期化を遅らせる
     private lateinit var binding: ActivityMainBinding
-    lateinit var DB: AppDatabase
+    lateinit var db: AppDatabase
     lateinit var dao: ApiDao
     lateinit var client: OkHttpClient
     lateinit var request: Request
@@ -39,13 +41,16 @@ class MainActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
+                /** 遠藤さんコメント **/
+                //sleep(20000); // 20秒バックグラウンド処理を待つ
+                /** 遠藤さんコメント **/
 
-                // DB初期化
-                DB = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "forecast")
+                // db初期化
+                db = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "forecast")
                     .addMigrations(MIGRATION_1_2)
                     .build()
                 // dao初期化
-                dao = DB.ApiDao()
+                dao = db.ApiDao()
 
                 // delete
                 dao.deleteAll()
@@ -99,11 +104,18 @@ class MainActivity : AppCompatActivity() {
     private fun show(forecast:MutableList<Forecast>) {
         GlobalScope.launch {
             withContext(Dispatchers.Main){
+// TODO:リサイクラービューにする
 // Adapter
                 binding.listView.adapter = CustomAdapter(this@MainActivity, forecast)
 
+// ProgressBar非表示
+                binding.mainProgressbar.visibility = android.widget.ProgressBar.INVISIBLE
+
 // ListViewのクリックリスナー
                 binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
+
+// クリックしたらProgressBar表示
+                binding.mainProgressbar.visibility = android.widget.ProgressBar.VISIBLE
 
                     parent.getItemAtPosition(position) as Forecast
 
@@ -134,7 +146,7 @@ class MainActivity : AppCompatActivity() {
 // private fun show(result: MutableList<API>) {
 // }
 
-// cursor = DB.query("api_table", arrayOf("text"),null,null,null,null,null)
+// cursor = db.query("api_table", arrayOf("text"),null,null,null,null,null)
 // cursor.moveToFirst()
 
 // lateinit var handler: Handler

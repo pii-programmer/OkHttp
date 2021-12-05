@@ -26,25 +26,6 @@ class CustomAdapter(context: Context, list: MutableList<Forecast>):ArrayAdapter<
             it.findViewById<TextView>(R.id.telop).text = data.telop
         }
 
-//        when(data.icon){
-//            "tokyo" -> {
-//                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.tokyo)
-//            }
-//            "shizuoka" -> {
-//                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.shizuoka)
-//            }
-//            "kagawa" -> {
-//                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.kagawa)
-//            }
-//            "kumamoto" -> {
-//                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.kumamoto)
-//            }
-//            "miyagi" -> {
-//                view?.findViewById<ImageView>(R.id.icon)?.setImageResource(R.drawable.miyagi)
-//            }
-//        }
-//        view?.findViewById<TextView>(R.id.prefecture)?.apply { text = data.prefecture }
-
         return view!!
     }
 }

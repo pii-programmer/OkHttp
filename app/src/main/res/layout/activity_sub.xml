@@ -8,7 +8,7 @@
     tools:context=".SubActivity">
 
         <RelativeLayout
-            android:id="@+id/detail_relative_layout0"
+            android:id="@+id/detail_today"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -18,7 +18,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/detail_relative_layout1"
+            android:id="@+id/detail_tomorrow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -28,7 +28,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/detail_relative_layout2"
+            android:id="@+id/detail_day_after_tomorrow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
@@ -36,5 +36,13 @@
             tools:ignore="MissingConstraints">
 
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

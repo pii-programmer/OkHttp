@@ -1,5 +1,6 @@
 package com.example.okhttp
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
@@ -23,7 +24,6 @@ class SubActivity:AppCompatActivity() {
         binding = ActivitySubBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // CustomActivityにする
         GlobalScope.launch {
             val forecast = withContext(Dispatchers.IO) {
 
@@ -48,7 +48,7 @@ class SubActivity:AppCompatActivity() {
                                 text = forecastRecord.detail
                                 setTextColor(Color.parseColor("green"))
                             }
-                            binding.detailRelativeLayout0.addView(tv0)
+                            binding.detailToday.addView(tv0)
                         }
                         (i==1 && id==1.toLong()) -> {
                             val forecastRecord = forecast[1]
@@ -56,7 +56,7 @@ class SubActivity:AppCompatActivity() {
                                 text = forecastRecord.detail
                                 setTextColor(Color.parseColor("red"))
                             }
-                            binding.detailRelativeLayout1.addView(tv1)
+                            binding.detailTomorrow.addView(tv1)
                         }
                         (i==2 && id==2.toLong()) -> {
                             val forecastRecord = forecast[2]
@@ -64,8 +64,16 @@ class SubActivity:AppCompatActivity() {
                                 text = forecastRecord.detail
                                 setTextColor(Color.parseColor("blue"))
                             }
-                            binding.detailRelativeLayout2.addView(tv2)
+                            binding.detailDayAfterTomorrow.addView(tv2)
                         }
+                    }
+                }
+// ナビゲーションバーの戻るボタンを押した時finish()が呼ばれる。
+// 戻るボタンを押したらMainActivityのonCreateメソッドを呼びたいので、Intentクラスのインスタンスを生成しMainActivityへ遷移する様にする。
+                binding.backButton.setOnClickListener{
+//                    finish()
+                    Intent(this@SubActivity,MainActivity::class.java).apply {
+                        startActivity(this)
                     }
                 }
             }

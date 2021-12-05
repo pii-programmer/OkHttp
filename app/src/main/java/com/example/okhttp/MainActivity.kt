@@ -31,11 +31,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 // activity_mainに表示させておく
-        val datas = mutableListOf<Forecast>()
-        datas.add(Forecast().apply {
-            date = "sample:2021-12-09"
-            telop = "サンプルテロップ"
-        })
+//        val datas = mutableListOf<Forecast>()
+//        datas.add(Forecast().apply {
+//            date = "sample:2021-12-09"
+//            telop = "サンプルテロップ"
+//        })
 // Adapter
 //        binding.listView.adapter = CustomAdapter(this@MainActivity, datas)
 
@@ -104,7 +104,6 @@ class MainActivity : AppCompatActivity() {
     private fun show(forecast:MutableList<Forecast>) {
         GlobalScope.launch {
             withContext(Dispatchers.Main){
-// TODO:リサイクラービューにする
 // Adapter
                 binding.listView.adapter = CustomAdapter(this@MainActivity, forecast)
 

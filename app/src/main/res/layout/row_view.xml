@@ -11,7 +11,7 @@
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="日付"
+        android:text="@string/date"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/telop"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
         android:id="@+id/telop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="天気のテロップ"
+        android:text="@string/telop"
         app:layout_constraintTop_toBottomOf="@+id/date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

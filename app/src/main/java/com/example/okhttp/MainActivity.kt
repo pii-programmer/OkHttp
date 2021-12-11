@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.Room
-import androidx.room.migration.Migration
 import com.example.okhttp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -104,35 +104,34 @@ class MainActivity : AppCompatActivity() {
     private fun show(forecast:MutableList<Forecast>) {
         GlobalScope.launch {
             withContext(Dispatchers.Main){
-// Adapter
-                binding.listView.adapter = CustomAdapter(this@MainActivity, forecast)
 
-// ProgressBar非表示
+                // ProgressBar非表示
                 binding.mainProgressbar.visibility = android.widget.ProgressBar.INVISIBLE
 
+                // LayoutManagerでレイアウトを作成する。そのためにコンテキストとグリッド内の列の数を渡す。
+                binding.recyclerView.layoutManager = GridLayoutManager(this@MainActivity,2)
+
+                // Adapterに表示させたいデータを挿入
+                binding.recyclerView.adapter = RecyclerAdapter(forecast)
+
+// ListViewのAdapter
+//                binding.listView.adapter = CustomAdapter(this@MainActivity, forecast)
+
 // ListViewのクリックリスナー
-                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
+//                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
 
-// クリックしたらProgressBar表示
-                binding.mainProgressbar.visibility = android.widget.ProgressBar.VISIBLE
-
-                    parent.getItemAtPosition(position) as Forecast
-
-                    Intent(this@MainActivity, SubActivity::class.java).apply {
-                        putExtra("ID",id)
-                        startActivity(this)
-                    }
+//                    parent.getItemAtPosition(position) as Forecast
+//                    Intent(this@MainActivity, SubActivity::class.java).apply {
+//                        putExtra("ID",id)
+//                        startActivity(this)
+//                    }
                 }
             }
         }
     }
-}
 
-/****  遠藤さんコメント  ****/
+
 // {処理A} Thread.sleep(1000) {処理B} 処理Aを待ってから処理Bを走らせる
-
-// val forecasts = mutableListOf<Forecast>()
-/****  遠藤さんコメント  ****/
 
 // try {
 //     dao.insertAll(forecast)

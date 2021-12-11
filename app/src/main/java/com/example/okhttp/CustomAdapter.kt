@@ -26,6 +26,7 @@ class CustomAdapter(context: Context, list: MutableList<Forecast>):ArrayAdapter<
             it.findViewById<TextView>(R.id.telop).text = data.telop
         }
 
+        // このプログラムでは view は null になり得ません という意味の「!!」
         return view!!
     }
 }

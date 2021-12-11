@@ -2,5 +2,7 @@
     <string name="app_name">okhttp</string>
     <string name="toolbar_title">お天気予報</string>
     <string name="toolbar_subtitle">地域を選んでね</string>
+    <string name="date">日付</string>
+    <string name="telop">テロップ</string>
     <string name="back">戻る</string>
 </resources>

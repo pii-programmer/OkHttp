@@ -1,9 +1,6 @@
 package com.example.okhttp
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.Room
@@ -111,15 +108,14 @@ class MainActivity : AppCompatActivity() {
                 // LayoutManagerでレイアウトを作成する。そのためにコンテキストとグリッド内の列の数を渡す。
                 binding.recyclerView.layoutManager = GridLayoutManager(this@MainActivity,2)
 
-                // Adapterに表示させたいデータを挿入
+                // RecyclerView に Adapterをセット
                 binding.recyclerView.adapter = RecyclerAdapter(forecast)
 
-// ListViewのAdapter
+// ListView に Adapter をセット
 //                binding.listView.adapter = CustomAdapter(this@MainActivity, forecast)
 
-// ListViewのクリックリスナー
+// ListView は TextView に直接クリックリスナを設定できる
 //                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
-
 //                    parent.getItemAtPosition(position) as Forecast
 //                    Intent(this@MainActivity, SubActivity::class.java).apply {
 //                        putExtra("ID",id)
@@ -130,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+/** 以下メモ **/
 // {処理A} Thread.sleep(1000) {処理B} 処理Aを待ってから処理Bを走らせる
 
 // try {

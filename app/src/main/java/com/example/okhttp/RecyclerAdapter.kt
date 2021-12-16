@@ -1,38 +1,53 @@
 package com.example.okhttp
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-// RecyclerAdapterクラスの役割は、各アイテム(tvDate と tvTelop)にデータを割り当てること。
-// だから表示させたいデータを ViewHolder から受け取り、RecyclerAdapterクラスのコンストラクタにしてる。
+// 役割分担：Adapterは表示するデータを受け・渡すだけ
 class RecyclerAdapter(private val forecast :MutableList<Forecast>):RecyclerView.Adapter<ViewHolder>() {
 
-    // 各アイテム(tvDate と tvTelop)のロジック
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int):ViewHolder{
 
-        // 一行分の row_view を作成
+        // row_view をインフレート
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.row_view,viewGroup,false)
 
+        // ViewHolderのインスタンス生成
+        val viewHolder = ViewHolder(view)
 
+        // クリックするアイテムのポジションを取得しておく
+        val position = viewHolder.layoutPosition
+
+        // ViewHolderからcontextを取得しておく
+        val context = viewHolder.itemView.context
+
+        viewHolder.onRowClick(position, context)
 
         // ViewHolderを返す
-        return ViewHolder(view)
+        return viewHolder
     }
 
-    // ViewHolderと各アイテムのポジションが渡ってくる
+    // パラメータ：ViewHolder, アイテムのポジション
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int){
 
-        // 表示するアイテムのポジションを取得
+        // アイテムのポジションを取得
         val forecast = forecast[position]
 
-        // row_view の tvDate と tvTelop に割り当てる
-        viewHolder.tvDate.text = forecast.date
-        viewHolder.tvTelop.text = forecast.telop
+        // ViewHolderでアイテムを割り当てる
+        viewHolder.bind(forecast, viewHolder)
     }
 
-    // 表示するのに必要なアイテムの数を返す
+    // アイテムの数を返す
     override fun getItemCount(): Int {
         return forecast.size
     }
 }
+/** RecyclerViewのルール **/
+// AdapterはRecyclerView.Adapterクラスを継承する
+// 表示するデータをAdapterクラスのコンストラクタにする
+// 3つのメソッドをoverrideする（必須）：onCreateViewHolder, onBindViewHolder, getItemCount
+/** メモ **/
+//val intent = Intent(context, SubActivity::class.java)
+//        intent.putExtra("ID", forecast[position].id?.toInt())
+//        context.startActivity(intent)

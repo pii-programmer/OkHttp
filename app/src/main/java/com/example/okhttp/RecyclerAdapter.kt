@@ -1,6 +1,5 @@
 package com.example.okhttp
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -16,13 +15,11 @@ class RecyclerAdapter(private val forecast :MutableList<Forecast>):RecyclerView.
         // ViewHolderのインスタンス生成
         val viewHolder = ViewHolder(view)
 
-        // クリックするアイテムのポジションを取得しておく
-        val position = viewHolder.layoutPosition
-
-        // ViewHolderからcontextを取得しておく
-        val context = viewHolder.itemView.context
-
-        viewHolder.onRowClick(position, context)
+        view.setOnClickListener{
+            // クリックしたら、クリックしたアイテムのポジション取得
+            val position = viewHolder.layoutPosition
+            viewHolder.onRowClick(position,forecast)
+        }
 
         // ViewHolderを返す
         return viewHolder
@@ -47,7 +44,11 @@ class RecyclerAdapter(private val forecast :MutableList<Forecast>):RecyclerView.
 // AdapterはRecyclerView.Adapterクラスを継承する
 // 表示するデータをAdapterクラスのコンストラクタにする
 // 3つのメソッドをoverrideする（必須）：onCreateViewHolder, onBindViewHolder, getItemCount
+//
 /** メモ **/
 //val intent = Intent(context, SubActivity::class.java)
 //        intent.putExtra("ID", forecast[position].id?.toInt())
 //        context.startActivity(intent)
+//
+//        // ViewHolderからcontextを取得しておく
+//        val context = viewHolder.itemView.context

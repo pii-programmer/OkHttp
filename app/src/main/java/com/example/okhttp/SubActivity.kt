@@ -24,7 +24,7 @@ class SubActivity:AppCompatActivity() {
         binding = ActivitySubBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // TODO:3 DBの初期化は1回だけ。DB削除して再初期化する時は、アプリ側でDBを更新する必要がある時だけ。
+        // TODO:2 DBの初期化は1回だけ。DB削除して再初期化する時は、アプリ側でDBを更新する必要がある時だけ。
         GlobalScope.launch {
             val result = withContext(Dispatchers.IO) {
 

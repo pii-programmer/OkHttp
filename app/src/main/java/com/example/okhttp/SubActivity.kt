@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json.Default.context
 
-class SubActivity:AppCompatActivity() {
+class SubActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySubBinding
     lateinit var db: AppDatabase
     lateinit var dao: ApiDao
@@ -24,7 +24,7 @@ class SubActivity:AppCompatActivity() {
         binding = ActivitySubBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // TODO:2 DBの初期化は1回だけ。DB削除して再初期化する時は、アプリ側でDBを更新する必要がある時だけ。
+        // TODO: DBの初期化は1回だけ。DB削除して再初期化する時は、アプリ側でDBを更新する必要がある時だけ。
         GlobalScope.launch {
             val result = withContext(Dispatchers.IO) {
 

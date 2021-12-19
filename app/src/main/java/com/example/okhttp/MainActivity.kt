@@ -38,9 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                /** 遠藤さんコメント **/
-                //sleep(20000); // 20秒バックグラウンド処理を待つ
-                /** 遠藤さんコメント **/
+//                sleep(20000); // 20秒バックグラウンド処理を待つ
 
                 // db初期化
                 db = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "forecast")

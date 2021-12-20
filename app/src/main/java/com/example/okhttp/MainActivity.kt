@@ -3,7 +3,7 @@ package com.example.okhttp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.room.Room
+import com.example.okhttp.AppDatabase.Companion.getDatabase
 import com.example.okhttp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -12,12 +12,10 @@ import kotlinx.coroutines.withContext
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
-import java.lang.Thread.sleep
 
 class MainActivity : AppCompatActivity() {
     // NullPointerExceptionが発生するので初期化を遅らせる
     private lateinit var binding: ActivityMainBinding
-    lateinit var db: AppDatabase
     lateinit var dao: ApiDao
     lateinit var client: OkHttpClient
     lateinit var request: Request
@@ -27,25 +25,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-// activity_mainに表示させておく
-//        val datas = mutableListOf<Forecast>()
-//        datas.add(Forecast().apply {
-//            date = "sample:2021-12-09"
-//            telop = "サンプルテロップ"
-//        })
-// Adapter
-//        binding.listView.adapter = CustomAdapter(this@MainActivity, datas)
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
 //                sleep(20000); // 20秒バックグラウンド処理を待つ
 
-                // db初期化
-                db = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "forecast")
-                    .addMigrations(MIGRATION_1_2)
-                    .build()
                 // dao初期化
-                dao = db.ApiDao()
+                dao = getDatabase(this@MainActivity).ApiDao()
 
                 // delete
                 dao.deleteAll()
@@ -123,10 +109,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 /** 以下メモ **/
+// db初期化
+//                db = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "forecast")
+//                    .addMigrations(MIGRATION_1_2)
+//                    .build()
+// dao初期化
+//                dao = db.ApiDao()
+//
 // {処理A} Thread.sleep(1000) {処理B} 処理Aを待ってから処理Bを走らせる
-
+//
 // try {
 //     dao.insertAll(forecast)
 //     val select = dao.selectAll()
@@ -137,10 +129,10 @@ class MainActivity : AppCompatActivity() {
 // }
 // private fun show(result: MutableList<API>) {
 // }
-
+//
 // cursor = db.query("api_table", arrayOf("text"),null,null,null,null,null)
 // cursor.moveToFirst()
-
+//
 // lateinit var handler: Handler
 // handlerの初期化
 //                handler = Handler(Looper.getMainLooper())
@@ -152,7 +144,16 @@ class MainActivity : AppCompatActivity() {
 //                        putExtra("RESULT_TEXT", result.toString())
 //                        startActivity(this)
 //                    }
-
+//
+// activity_mainに表示させておく
+//        val datas = mutableListOf<Forecast>()
+//        datas.add(Forecast().apply {
+//            date = "sample:2021-12-09"
+//            telop = "サンプルテロップ"
+//        })
+// Adapter
+//        binding.listView.adapter = CustomAdapter(this@MainActivity, datas)
+//
 // Forecast型で１データ入れてみたがBoolean型になってしまいClassCastException
 //                val dummy = mutableListOf<Forecast>()
 //                val dummyList = dummy.add(Forecast().apply {

@@ -9,9 +9,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SubActivity : AppCompatActivity() {
+class SubActivity : BaseActivity() {
     private lateinit var binding: ActivitySubBinding
-    lateinit var dao: ApiDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +19,6 @@ class SubActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             val result = withContext(Dispatchers.IO) {
-
-                dao = AppDatabase.getDatabase(this@SubActivity).ApiDao()
 
                 val id = intent.getIntExtra("ID",0)
                 dao.select(id)
@@ -41,18 +38,12 @@ class SubActivity : AppCompatActivity() {
                 }
                 binding.DetailRelativeLayout.addView(detailTextView)
 
-
+                // "今日の天気は${whether}です。\n\n風向きは${wind}です。\n\n風速は${wave}です。良い一日を"
             }
         }
     }
 }
 /** 以下メモ **/
-//db = Room.databaseBuilder(this@SubActivity, AppDatabase::class.java, "forecast")
-//                    .addMigrations(MIGRATION_1_2)
-//                    .build()
-//
-//                dao = db.ApiDao()
-//
 // ナビゲーションバーの ◀︎ は onDestroy()？
 // binding.backButton.setOnClickListener{
 //     Intent(this@SubActivity,MainActivity::class.java).apply {

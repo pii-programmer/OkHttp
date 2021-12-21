@@ -13,10 +13,9 @@ import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     // NullPointerExceptionが発生するので初期化を遅らせる
     private lateinit var binding: ActivityMainBinding
-    lateinit var dao: ApiDao
     lateinit var client: OkHttpClient
     lateinit var request: Request
 
@@ -29,9 +28,6 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
 //                sleep(20000); // 20秒バックグラウンド処理を待つ
-
-                // dao初期化
-                dao = getDatabase(this@MainActivity).ApiDao()
 
                 // delete
                 dao.deleteAll()
@@ -51,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onResponse(call: Call, response: Response) {
                         val jsonObject = JSONObject(response.body?.string())
-// result
+
                         val forecastJSONArray = jsonObject.getJSONArray("forecasts")  // "forecasts"はJSONObjectのJSONArray
 
                         for (i in 0 until forecastJSONArray.length()){
@@ -94,17 +90,6 @@ class MainActivity : AppCompatActivity() {
 
                 // RecyclerView に Adapterをセット
                 binding.recyclerView.adapter = RecyclerAdapter(forecast)
-
-// ListView に Adapter をセット
-//                binding.listView.adapter = CustomAdapter(this@MainActivity, forecast)
-
-// ListView は TextView に直接クリックリスナを設定できる
-//                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
-//                    parent.getItemAtPosition(position) as Forecast
-//                    Intent(this@MainActivity, SubActivity::class.java).apply {
-//                        putExtra("ID",id)
-//                        startActivity(this)
-//                    }
                 }
             }
         }
@@ -116,6 +101,9 @@ class MainActivity : AppCompatActivity() {
 //                    .build()
 // dao初期化
 //                dao = db.ApiDao()
+//    lateinit var dao: ApiDao
+// dao初期化
+//                dao = getDatabase(this@MainActivity).ApiDao()
 //
 // {処理A} Thread.sleep(1000) {処理B} 処理Aを待ってから処理Bを走らせる
 //
@@ -151,7 +139,18 @@ class MainActivity : AppCompatActivity() {
 //            date = "sample:2021-12-09"
 //            telop = "サンプルテロップ"
 //        })
+//
 // Adapter
+// ListView に Adapter をセット
+//                binding.listView.adapter = CustomAdapter(this@MainActivity, forecast)
+//
+// ListView は TextView に直接クリックリスナを設定できる
+//                binding.listView.setOnItemClickListener { parent: AdapterView<*>, view: View, position, id ->
+//                    parent.getItemAtPosition(position) as Forecast
+//                    Intent(this@MainActivity, SubActivity::class.java).apply {
+//                        putExtra("ID",id)
+//                        startActivity(this)
+//                    }
 //        binding.listView.adapter = CustomAdapter(this@MainActivity, datas)
 //
 // Forecast型で１データ入れてみたがBoolean型になってしまいClassCastException

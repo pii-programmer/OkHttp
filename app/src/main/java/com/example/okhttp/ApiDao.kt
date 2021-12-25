@@ -3,6 +3,7 @@ package com.example.okhttp
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import java.io.Serializable
 
 @Dao
 interface ApiDao {

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import java.lang.StringBuilder
 
 // 役割分担：ViewHolder で UI部品 と UIの変更点 を管理
 class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

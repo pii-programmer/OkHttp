@@ -44,7 +44,6 @@ class RecyclerAdapter(private val forecast :MutableList<Forecast>):RecyclerView.
 // AdapterはRecyclerView.Adapterクラスを継承する
 // 表示するデータをAdapterクラスのコンストラクタにする
 // 3つのメソッドをoverrideする（必須）：onCreateViewHolder, onBindViewHolder, getItemCount
-//
 /** メモ **/
 //val intent = Intent(context, SubActivity::class.java)
 //        intent.putExtra("ID", forecast[position].id?.toInt())

@@ -7,15 +7,14 @@ open class BaseActivity : AppCompatActivity() {
     lateinit var db: AppDatabase
     lateinit var dao: ApiDao
 
-    // アプリの起動や再起動時・画面の回転時に Activity は生成される
-    // その際 savedInstanceState:Bundle に値が入ってくる
-    // 普段は null なので null許容にしてる
+    // savedInstanceState = 初回は null。 view の再生成時に値が入る
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // setContentView は不要
+
         // db初期化
-        // getDatabase メソッド = AppDatabaseクラス で定義した Database のインスタンスをアプリ内で一つだけにするメソッド
-        // getDatabase メソッドに 基底Activity の context を渡す
+        // getDatabase = AppDatabaseクラス で定義したメソッド。Database のインスタンスをアプリ内で一つだけにしてる
         db = AppDatabase.getDatabase(this)
 
         // dao初期化

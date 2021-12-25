@@ -4,5 +4,8 @@
     <string name="toolbar_subtitle">地域を選んでね</string>
     <string name="date">日付</string>
     <string name="telop">テロップ</string>
+    <string name="whether">天気は</string>
+    <string name="wind">風向きは</string>
+    <string name="wave">風速は</string>
     <string name="back">戻る</string>
 </resources>

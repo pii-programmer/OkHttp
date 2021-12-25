@@ -1,9 +1,7 @@
 package com.example.okhttp
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.okhttp.AppDatabase.Companion.getDatabase
 import com.example.okhttp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -14,9 +12,9 @@ import org.json.JSONObject
 import java.io.IOException
 
 class MainActivity : BaseActivity() {
-    // NullPointerExceptionが発生するので初期化を遅らせる
-    private lateinit var binding: ActivityMainBinding
-    lateinit var client: OkHttpClient
+    // classのメンバ（このスコープ内で使用する変数）
+    private lateinit var binding: ActivityMainBinding// private 書き換えられたら困る
+    lateinit var client: OkHttpClient// lateinit 初期化を遅らせてNullPointerExceptionを発生させない
     lateinit var request: Request
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +27,6 @@ class MainActivity : BaseActivity() {
             withContext(Dispatchers.IO) {
 //                sleep(20000); // 20秒バックグラウンド処理を待つ
 
-                // delete
                 dao.deleteAll()
 
                 // client初期化
@@ -51,16 +48,23 @@ class MainActivity : BaseActivity() {
                         val forecastJSONArray = jsonObject.getJSONArray("forecasts")  // "forecasts"はJSONObjectのJSONArray
 
                         for (i in 0 until forecastJSONArray.length()){
-                            val forecastJSON = forecastJSONArray.getJSONObject(i)
+                            val forecastJSON = forecastJSONArray.getJSONObject(i) // 3日分の"date"と"telop"と"detail"
                             val date = forecastJSON.getString("date")
-                            val telop = forecastJSON.getString("telop")    // 3日分の"date"と"telop"
-                            val detail = forecastJSON.getString("detail")  // "detail"も
+                            val telop = forecastJSON.getString("telop")
+
+                            val detailObject = forecastJSON.getJSONObject("detail")
+
+                            // detail の中身を Triple に
+                            val detail = Triple(
+                                detailObject.getString("weather"),
+                                detailObject.getString("wind"),
+                                detailObject.getString("wave"))
 
                             val forecasts = mutableListOf<Forecast>()
                             forecasts.add(Forecast().apply {
                                 this.date = date
                                 this.telop = telop
-                                this.detail = detail
+                                this.detail = detail.toString()
                             })
                             dao.insertAll(forecasts)
                         }
@@ -99,9 +103,6 @@ class MainActivity : BaseActivity() {
 //                db = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "forecast")
 //                    .addMigrations(MIGRATION_1_2)
 //                    .build()
-// dao初期化
-//                dao = db.ApiDao()
-//    lateinit var dao: ApiDao
 // dao初期化
 //                dao = getDatabase(this@MainActivity).ApiDao()
 //

@@ -1,8 +1,6 @@
 package com.example.okhttp
 
 import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.example.okhttp.databinding.ActivitySubBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -17,29 +15,28 @@ class SubActivity : BaseActivity() {
         binding = ActivitySubBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        GlobalScope.launch {
-            val result = withContext(Dispatchers.IO) {
 
-                val id = intent.getIntExtra("ID",0)
-                dao.select(id)
+        GlobalScope.launch {
+            var selectDetail: String?// タップした detail を GlobalScope 内で使用するプロパティに
+
+            withContext(Dispatchers.IO) {
+                val id = intent.getIntExtra("ID", 0)
+
+                selectDetail = dao.select(id)
+                    .replace("(", "")
+                    .replace(")", "")
             }
 
             withContext(Dispatchers.Main) {
+                val detailArray = selectDetail?.split(",")// String から 配列に戻す
 
-                val detailTextView = TextView(this@SubActivity).apply {
-                    text = result.replace(",","\n\n\n")
-                            .replace("{","")
-                            .replace("}","")
-                            .replace(":","\n")
-                            .replace("\"","")
-                            .replace("weather","◆天気は")
-                            .replace("wind","◆風向きは")
-                            .replace("wave","◆風速は")
+                detailArray?.let { detail ->
+                    binding.detailWeather.text = detail[0]
+                    binding.detailWind.text = detail[1]
+                    binding.detailWave.text = detail[2]
                 }
-                binding.DetailRelativeLayout.addView(detailTextView)
-
-                // "今日の天気は${whether}です。\n\n風向きは${wind}です。\n\n風速は${wave}です。良い一日を"
             }
+
         }
     }
 }
@@ -51,6 +48,12 @@ class SubActivity : BaseActivity() {
 //     }
 // }
 //
+// String から 配列に
+// val detailArray = selectDetail?.split(",")
+//          detailArray?.forEach { detail ->
+//              print(detail)
+//          }
+// index No.0 1 2 をデバッグで確認した
 // 動的レイアウト
 //                for (i in 0 until forecast.size) {
 //                    when{
@@ -80,3 +83,15 @@ class SubActivity : BaseActivity() {
 //                        }
 //                    }
 //                }
+// 動的レイアウト
+//                val detailTextView = TextView(this@SubActivity).apply {
+//                    text = result.replace(",","\n\n\n")
+//                            .replace("{","")
+//                            .replace("}","")
+//                            .replace(":","\n")
+//                            .replace("\"","")
+//                            .replace("weather","◆天気は")
+//                            .replace("wind","◆風向きは")
+//                            .replace("wave","◆風速は")
+//                }
+//                binding.DetailRelativeLayout.addView(detailTextView)

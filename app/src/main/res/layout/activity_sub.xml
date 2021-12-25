@@ -3,20 +3,123 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/rainbow"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".SubActivity">
 
-        <RelativeLayout
-            android:id="@+id/DetailRelativeLayout"
+        <ImageView
+            android:id="@+id/sun"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/icon_glass"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/top_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/bottom_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.9"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/weather_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            tools:ignore="MissingConstraints">
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            app:layout_constraintTop_toTopOf="@+id/top_guideline"
+            app:layout_constraintBottom_toTopOf="@+id/wind_area">
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/title_weather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/whether"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintVertical_chainStyle="spread"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_weather"/>
 
+            <TextView
+                android:id="@+id/detail_weather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/title_weather"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/wind_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/weather_area"
+            app:layout_constraintBottom_toTopOf="@+id/wave_area">
+
+            <TextView
+                android:id="@+id/title_wind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/wind"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintVertical_chainStyle="spread"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/detail_wind"/>
+
+            <TextView
+                android:id="@+id/detail_wind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/title_wind"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/wave_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/wind_area"
+            app:layout_constraintBottom_toBottomOf="@+id/bottom_guideline">
+
+            <TextView
+                android:id="@+id/title_wave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/wave"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintVertical_chainStyle="spread"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/detail_wave"/>
+
+            <TextView
+                android:id="@+id/detail_wave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/title_wave"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/DetailRelativeLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:layout_marginRight="15dp"-->
+<!--            tools:ignore="MissingConstraints">-->
+<!--        </RelativeLayout>-->
+<!---->
 <!--        <Button-->
 <!--            android:id="@+id/back_button"-->
 <!--            android:layout_width="wrap_content"-->
@@ -24,5 +127,5 @@
 <!--            android:text="@string/back"-->
 <!--            app:layout_constraintBottom_toBottomOf="parent"-->
 <!--            app:layout_constraintEnd_toEndOf="parent"/>-->
-
+<!---->
 </androidx.constraintlayout.widget.ConstraintLayout>

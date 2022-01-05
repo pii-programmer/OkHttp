@@ -12,9 +12,8 @@ import org.json.JSONObject
 import java.io.IOException
 
 class MainActivity : BaseActivity() {
-    // classのメンバ（このスコープ内で使用する変数）
-    private lateinit var binding: ActivityMainBinding// private 書き換えられたら困る
-    lateinit var client: OkHttpClient// lateinit 初期化を遅らせてNullPointerExceptionを発生させない
+    private lateinit var binding: ActivityMainBinding
+    lateinit var client: OkHttpClient
     lateinit var request: Request
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +91,10 @@ class MainActivity : BaseActivity() {
                 // LayoutManagerでレイアウトを作成する。そのためにコンテキストとグリッド内の列の数を渡す。
                 binding.recyclerView.layoutManager = GridLayoutManager(this@MainActivity,2)
 
-                // RecyclerView に Adapterをセット
+                // インターセプトしてタッチイベント実行
+                binding.recyclerView.addOnItemTouchListener(ViewHolder.TouchListener())
+
+                // RecyclerView に Adapterをセット（同時に初期化）
                 binding.recyclerView.adapter = RecyclerAdapter(forecast)
                 }
             }

@@ -1,6 +1,7 @@
 package com.example.okhttp
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -12,12 +13,15 @@ class RecyclerAdapter(private val forecast :MutableList<Forecast>):RecyclerView.
         // row_view をインフレート
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.row_view,viewGroup,false)
 
-        // ViewHolderのインスタンス生成
+        // ViewHolderのインスタンス生成 // view を渡す
         val viewHolder = ViewHolder(view)
 
+        // クリックしたら
         view.setOnClickListener{
-            // クリックしたら、クリックしたアイテムのポジション取得
+            // クリックしたアイテムのポジション取得
             val position = viewHolder.layoutPosition
+
+            // onRowClick 発動
             viewHolder.onRowClick(position,forecast)
         }
 

@@ -17,7 +17,8 @@ class SubActivity : BaseActivity() {
 
 
         GlobalScope.launch {
-            var selectDetail: String?// タップした detail を GlobalScope 内で使用するプロパティに
+            // タップした detail を GlobalScope のプロパティに
+            var selectDetail: String?
 
             withContext(Dispatchers.IO) {
                 val id = intent.getIntExtra("ID", 0)
@@ -28,7 +29,8 @@ class SubActivity : BaseActivity() {
             }
 
             withContext(Dispatchers.Main) {
-                val detailArray = selectDetail?.split(",")// String から 配列に戻す
+                // detail を String から 配列に戻す
+                val detailArray = selectDetail?.split(",")
 
                 detailArray?.let { detail ->
                     binding.detailWeather.text = detail[0]

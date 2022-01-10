@@ -1,7 +1,9 @@
 package com.example.okhttp
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -10,32 +12,37 @@ class RecyclerAdapter(private val forecast :MutableList<Forecast>):RecyclerView.
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int):ViewHolder{
 
-        // row_view をインフレート
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.row_view,viewGroup,false)
 
-        // ViewHolderのインスタンス生成 // view を渡す
         val viewHolder = ViewHolder(view)
 
-        // クリックしたら
-        view.setOnClickListener{
-            // クリックしたアイテムのポジション取得
-            val position = viewHolder.layoutPosition
+        val rv = RecyclerView(viewHolder.itemView.context)
 
-            // onRowClick 発動
-            viewHolder.onRowClick(position,forecast)
+        view.setOnTouchListener { _, event ->
+            when (event?.action) {
+                MotionEvent.ACTION_DOWN -> {// タッチしたら onTouch を実行
+                    Log.d("touchTest","touch")
+
+                    viewHolder.onTouch(adapter = this, recyclerView = rv)
+                    Log.d("touchTest","attach")
+                }
+                MotionEvent.ACTION_UP -> {// 指を離したらクリックとして認識。onRowClick を実行
+                    Log.d("clickTest","clickTest")
+                    val position = viewHolder.layoutPosition
+
+                    viewHolder.onRowClick(position, forecast)
+                }
+            }
+            true
         }
 
-        // ViewHolderを返す
         return viewHolder
     }
 
-    // パラメータ：ViewHolder, アイテムのポジション
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int){
 
-        // アイテムのポジションを取得
         val forecast = forecast[position]
 
-        // ViewHolderでアイテムを割り当てる
         viewHolder.bind(forecast, viewHolder)
     }
 
@@ -49,6 +56,15 @@ class RecyclerAdapter(private val forecast :MutableList<Forecast>):RecyclerView.
 // 表示するデータをAdapterクラスのコンストラクタにする
 // 3つのメソッドをoverrideする（必須）：onCreateViewHolder, onBindViewHolder, getItemCount
 /** メモ **/
+//        // クリックしたら
+//        view.setOnClickListener{
+//            // クリックしたアイテムのポジション取得
+//            val position = viewHolder.layoutPosition
+//
+//            // onRowClick 発動
+//            viewHolder.onRowClick(position,forecast)
+//        }
+//
 //val intent = Intent(context, SubActivity::class.java)
 //        intent.putExtra("ID", forecast[position].id?.toInt())
 //        context.startActivity(intent)

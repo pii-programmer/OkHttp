@@ -2,6 +2,7 @@ package com.example.okhttp
 
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.okhttp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -85,22 +86,21 @@ class MainActivity : BaseActivity() {
         GlobalScope.launch {
             withContext(Dispatchers.Main){
 
-                // ProgressBar非表示
+                // ProgressBar 非表示
                 binding.mainProgressbar.visibility = android.widget.ProgressBar.INVISIBLE
 
-                // LayoutManagerでレイアウトを作成する。そのためにコンテキストとグリッド内の列の数を渡す。
-                binding.recyclerView.layoutManager = GridLayoutManager(this@MainActivity,2)
+                // LayoutManager でレイアウト作成
+                binding.recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
 
-                // インターセプトしてタッチイベント実行
-                binding.recyclerView.addOnItemTouchListener(ViewHolder.TouchListener())
-
-                // RecyclerView に Adapterをセット（同時に初期化）
+                // Adapterをセット（同時に初期化）
                 binding.recyclerView.adapter = RecyclerAdapter(forecast)
                 }
             }
         }
     }
-/** 以下メモ **/
+/** メモ **/
+//                // インターセプトしてタッチイベント実行
+//                binding.recyclerView.addOnItemTouchListener(ViewHolder.TouchListener())
 // db初期化
 //                db = Room.databaseBuilder(this@MainActivity, AppDatabase::class.java, "forecast")
 //                    .addMigrations(MIGRATION_1_2)

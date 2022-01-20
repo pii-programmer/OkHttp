@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-// 役割分担：ViewHolder で UI管理
+// 役割分担：ViewHolder で View管理
 class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
     var tvDate : TextView = view.findViewById(R.id.date)
@@ -19,24 +19,25 @@ class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         holder.tvTelop.text = forecast.telop
     }
 
-    // タッチの時は
-    fun onTouch(adapter: RecyclerAdapter, recyclerView: RecyclerView){
-        val touch = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
-        ){
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                val from = viewHolder.adapterPosition
-                val to = target.adapterPosition
-                adapter.notifyItemMoved(from, to)
-                return true
-            }
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            }
-        })
-        touch.attachToRecyclerView(recyclerView)
-    }
+//    fun onRowTouch(rv: RecyclerView){
+//        val touch = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+//            ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
+//        ){
+//            // recyclerView = ドラッグ＆ドロップの発生箇所, viewHolder = イベント開始時の座標, target = イベント終了時の座標
+//            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+//                val from = viewHolder.adapterPosition
+//                val to = target.adapterPosition
+//                rv.adapter!!.notifyItemMoved(from, to)// アダプターに変更内容を通知
+//                return true// 実行
+//            }
+//            // viewHolder = スワイプされた物, direction = スワイプしたポジション
+//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+//                rv.adapter!!.notifyItemRemoved(viewHolder.adapterPosition)
+//            }
+//        })
+//        touch.attachToRecyclerView(rv)
+//    }
 
-    // クリックの時は
     fun onRowClick(position: Int, forecast: MutableList<Forecast>){
 
         val context = itemView.context

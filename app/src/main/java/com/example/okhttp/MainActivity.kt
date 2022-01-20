@@ -1,8 +1,11 @@
 package com.example.okhttp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.okhttp.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -92,8 +95,28 @@ class MainActivity : BaseActivity() {
                 // LayoutManager でレイアウト作成
                 binding.recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
 
-                // Adapterをセット（同時に初期化）
-                binding.recyclerView.adapter = RecyclerAdapter(forecast)
+                // Adapterをセット
+                val recyclerAdapter = RecyclerAdapter(forecast)
+                binding.recyclerView.adapter = recyclerAdapter
+
+                // あたらしくrecyclerAdapter をよぶのではなく、今生きてる recyclerAdapter に変更点を加える
+                // binding.recyclerView も同じく
+                val itemTouchHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(
+                    ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
+
+                    // recyclerView = ドラッグ＆ドロップの発生箇所
+                    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                        val from = viewHolder.adapterPosition
+                        val to = target.adapterPosition
+                        recyclerAdapter.notifyItemMoved(from, to)
+                        return true
+                    }
+
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        recyclerAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+                    }
+                })
+                itemTouchHelper.attachToRecyclerView(binding.recyclerView)
                 }
             }
         }
